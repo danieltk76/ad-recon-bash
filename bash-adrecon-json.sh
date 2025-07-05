@@ -89,7 +89,7 @@ get_domain_info() {
     
     log_message "INFO" "Collecting domain information"
     
-    local ldap_result=$(ldapsearch -x -h "$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
+    local ldap_result=$(ldapsearch -x -H "ldap://$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
         -b "DC=$(echo $DOMAIN | sed 's/\./,DC=/g')" \
         -s base "(objectClass=*)" \
         dn distinguishedName whenCreated whenChanged \
@@ -122,7 +122,7 @@ get_users() {
     
     log_message "INFO" "Collecting users"
     
-    local users_data=$(ldapsearch -x -h "$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
+    local users_data=$(ldapsearch -x -H "ldap://$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
         -b "DC=$(echo $DOMAIN | sed 's/\./,DC=/g')" \
         -s sub "(objectClass=user)" \
         cn sAMAccountName description userAccountControl memberOf \
@@ -170,7 +170,7 @@ get_groups() {
     
     log_message "INFO" "Collecting groups"
     
-    local groups_data=$(ldapsearch -x -h "$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
+    local groups_data=$(ldapsearch -x -H "ldap://$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
         -b "DC=$(echo $DOMAIN | sed 's/\./,DC=/g')" \
         -s sub "(objectClass=group)" \
         cn sAMAccountName description groupType member \
@@ -222,7 +222,7 @@ get_computers() {
     
     log_message "INFO" "Collecting computers"
     
-    local computers_data=$(ldapsearch -x -h "$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
+    local computers_data=$(ldapsearch -x -H "ldap://$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
         -b "DC=$(echo $DOMAIN | sed 's/\./,DC=/g')" \
         -s sub "(objectClass=computer)" \
         cn sAMAccountName operatingSystem operatingSystemVersion lastLogon \
@@ -270,7 +270,7 @@ get_spns() {
     
     log_message "INFO" "Collecting SPNs"
     
-    local spns_data=$(ldapsearch -x -h "$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
+    local spns_data=$(ldapsearch -x -H "ldap://$DOMAIN_CONTROLLER" -D "$USERNAME@$DOMAIN" -w "$PASSWORD" \
         -b "DC=$(echo $DOMAIN | sed 's/\./,DC=/g')" \
         -s sub "(servicePrincipalName=*)" \
         sAMAccountName servicePrincipalName \
